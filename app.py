@@ -1,11 +1,24 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import os
 
-# Load trained model
-model = pickle.load(open("house_model.pkl", "rb"))
+# ------------------------------
+# Load trained model safely
+# ------------------------------
+model_path = "house_model.pkl"
 
+if os.path.exists(model_path):
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+    st.success("✅ Model loaded successfully!")
+else:
+    st.error(f"❌ Error: {model_path} file illa!")
+    st.stop()  # Stop app if model not found
+
+# ------------------------------
 # App Config
+# ------------------------------
 st.set_page_config(page_title="House Price Prediction", page_icon="🏡", layout="wide")
 
 # Header Section
@@ -21,7 +34,9 @@ st.markdown(
 
 st.write("")
 
+# ------------------------------
 # Sidebar Input
+# ------------------------------
 st.sidebar.header("📌 Enter House Features")
 
 def user_input_features():
@@ -63,14 +78,19 @@ input_df = user_input_features()
 st.markdown("### 🔎 Entered House Details")
 st.dataframe(input_df.style.set_properties(**{'background-color': '#f9f9f9', 'color': '#000'}))
 
+# ------------------------------
 # Predict Button
+# ------------------------------
 if st.button("✨ Predict Price"):
-    prediction = model.predict(input_df)
-    st.markdown(
-        f"""
-        <div style="background-color:#2196F3;padding:20px;border-radius:10px;margin-top:20px;">
-            <h2 style="color:white;text-align:center;">💰 Predicted House Price: ${prediction[0]:,.2f}</h2>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    try:
+        prediction = model.predict(input_df)
+        st.markdown(
+            f"""
+            <div style="background-color:#2196F3;padding:20px;border-radius:10px;margin-top:20px;">
+                <h2 style="color:white;text-align:center;">💰 Predicted House Price: ${prediction[0]:,.2f}</h2>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    except Exception as e:
+        st.error(f"Prediction error: {e}")
