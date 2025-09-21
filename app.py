@@ -1,16 +1,15 @@
 import streamlit as st
 import pandas as pd
-import pickle
+import joblib
 import os
 
 # ------------------------------
 # Load trained model safely
 # ------------------------------
-model_path = "house_model.pkl"
+model_path = "house_model.joblib"
 
 if os.path.exists(model_path):
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)
+    model = joblib.load(model_path)
     st.success("✅ Model loaded successfully!")
 else:
     st.error(f"❌ Error: {model_path} file illa!")
@@ -94,3 +93,4 @@ if st.button("✨ Predict Price"):
         )
     except Exception as e:
         st.error(f"Prediction error: {e}")
+
