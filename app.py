@@ -74,18 +74,29 @@ def user_input_features():
         "sqft_basement": sqft_basement,
         "yr_built": yr_built,
         "yr_renovated": yr_renovated,
+        "zipcode": zipcode,
         "lat": lat,
         "long": long,
         "sqft_living15": sqft_living15,
         "sqft_lot15": sqft_lot15,
-        "zipcode": zipcode,
     }
     features = pd.DataFrame(data, index=[0])
     return features
 
 input_df = user_input_features()
 
+# ✅ Reorder columns to match training model
+feature_order = [
+    'bedrooms', 'bathrooms', 'sqft_living', 'sqft_lot',
+    'floors', 'waterfront', 'view', 'condition', 'grade',
+    'sqft_above', 'sqft_basement', 'yr_built', 'yr_renovated',
+    'zipcode', 'lat', 'long', 'sqft_living15', 'sqft_lot15'
+]
+input_df = input_df[feature_order]
+
+# ------------------------------
 # Display input
+# ------------------------------
 st.markdown("### 🔎 Entered House Details")
 st.dataframe(input_df.style.set_properties(**{'background-color': '#f9f9f9', 'color': '#000'}))
 
