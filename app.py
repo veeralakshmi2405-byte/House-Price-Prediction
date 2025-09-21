@@ -53,6 +53,13 @@ def user_input_features():
     yr_built = st.sidebar.number_input("Year Built", 1900, 2023, 2000)
     yr_renovated = st.sidebar.number_input("Year Renovated", 0, 2023, 0)
 
+    # ✅ Extra features to match training data
+    lat = st.sidebar.number_input("Latitude", 47.0, 48.0, 47.5)
+    long = st.sidebar.number_input("Longitude", -123.0, -121.0, -122.0)
+    sqft_living15 = st.sidebar.number_input("Living Area (15 Nearest)", 500, 6000, 2000)
+    sqft_lot15 = st.sidebar.number_input("Lot Area (15 Nearest)", 500, 20000, 5000)
+    zipcode = st.sidebar.number_input("Zipcode", 98000, 99999, 98103)
+
     data = {
         "bedrooms": bedrooms,
         "bathrooms": bathrooms,
@@ -67,6 +74,11 @@ def user_input_features():
         "sqft_basement": sqft_basement,
         "yr_built": yr_built,
         "yr_renovated": yr_renovated,
+        "lat": lat,
+        "long": long,
+        "sqft_living15": sqft_living15,
+        "sqft_lot15": sqft_lot15,
+        "zipcode": zipcode,
     }
     features = pd.DataFrame(data, index=[0])
     return features
@@ -93,4 +105,3 @@ if st.button("✨ Predict Price"):
         )
     except Exception as e:
         st.error(f"Prediction error: {e}")
-
